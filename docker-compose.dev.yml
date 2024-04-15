@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  ws-server:
+    build:
+      context: ./
+      target: development-build-stage
+      dockerfile: Dockerfile
+    container_name: remi-ws-server
+    ports:
+      - '4100:3000' #http
+      - '4120:3020' #websocket
+    volumes:
+      - ./ws-server:/app
+      - ./ws-server/node_modules:/app/node_modules
+    restart: 'unless-stopped'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local

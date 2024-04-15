@@ -1,0 +1,4 @@
+.DS_Store
+.docker/redis/*
+.docker/mongo/*
+deploy-services/ws-server/*

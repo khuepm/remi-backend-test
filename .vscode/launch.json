@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Docker-Compose Up",
+            "command": "docker-compose -f docker-compose.dev.yml up"
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Docker-Compose Down",
+            "command": "docker-compose down"
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Start dev",
+            "command": "npm run dev"
+        }
+    ]
+}

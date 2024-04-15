@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  # mongo:
+  #   image: mvertes/alpine-mongo
+  #   container_name: remi-noti-mongo
+  #   ports:
+  #     - 27017:27017
+  #     - 9229:9229
+  #   volumes:
+  #     - .docker/mongo:/data/db
+  #     - .docker/mongo-init/:/docker-entrypoint-initdb.d/:ro
+  #   environment:
+  #         # TODO: Update this using env 
+  #         - MONGO_INITDB_ROOT_USERNAME=root
+  #         - MONGO_INITDB_ROOT_PASSWORD=root123
+  #         # - MONGO_INITDB_USERNAME=remi
+  #         # - MONGO_INITDB_PASSWORD=remi
+  #         # - MONGO_INITDB_DATABASE=remi-notification
+  #   restart: unless-stopped
+
+networks:
+  backend:
+    driver: bridge
