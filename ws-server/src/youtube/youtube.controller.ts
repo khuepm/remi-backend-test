@@ -6,11 +6,14 @@ export class YoutubeController {
 
   public getVideos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const data = req.body;
-
-      const getVideosData = await this.service.findVideoById(data.videoIds);
-
-      res.status(200).json({ data: getVideosData, message: 'getVideos' });
+      const ids: string = req.query.id as string;
+      const id = ids.split(',');
+      const getVideosData = await this.service.findVideoById(id);
+      if (getVideosData.data) {
+        res.status(200).json({ data: getVideosData.data.items, message: 'success' });
+      } else {
+        res.status(409).json({ error: true, message: 'Video not found' });
+      }
     } catch (error) {
       next(error);
     }

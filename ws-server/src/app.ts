@@ -9,7 +9,7 @@ import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import http from 'http';
 import { Server } from 'socket.io';
-import { SocketService } from '@services/socket.service';
+import { SocketService } from '@/socket/socket.service';
 import { Routes } from './server';
 
 export type User = {

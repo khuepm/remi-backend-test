@@ -1,10 +1,7 @@
 import { Message } from '@/app';
-import { authJWTMiddleware } from '@middlewares/auth.middleware';
-import wrapSocket from '@middlewares/socketAuth.middleware';
-// import authMiddleware from '@/middlewares/auth.middleware';
-// import wrapSocket from '@/middlewares/socketAuth.middleware';
 import { logger } from '@utils/logger';
 import { isEmpty } from 'class-validator';
+
 export class SocketService {
   private io;
   constructor(newio) {
@@ -20,7 +17,7 @@ export class SocketService {
       socket.on('join-room', userData => {
         if (isEmpty(userData)) return;
         logger.info(`join admin: ${JSON.stringify(userData)}`);
-        socket.join(userData.address);
+        socket.join(userData.id);
       });
 
       socket.on('authentication', authData => {
@@ -29,7 +26,7 @@ export class SocketService {
 
       socket.on('leave-room', userData => {
         if (isEmpty(userData)) return;
-        socket.leave(userData.address);
+        socket.leave(userData.id);
       });
 
       socket.on('send-message', (message: Message) => {
@@ -57,12 +54,12 @@ export class SocketService {
       socket.on('join-room', userData => {
         if (isEmpty(userData)) return;
         logger.info(`join user: ${JSON.stringify(userData)}`);
-        socket.join(userData.address);
+        socket.join(userData.id);
       });
 
       socket.on('leave-room', userData => {
         if (isEmpty(userData)) return;
-        socket.leave(userData.address);
+        socket.leave(userData.id);
       });
 
       socket.on('disconnect', () => {
