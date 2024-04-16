@@ -35,7 +35,7 @@ export class SocketService {
       socket.on('send-message', (message: Message) => {
         if (isEmpty(message)) return;
         console.log('server receive message from /admin', message);
-        user.in(message.toUser.address).emit('notifications', message);
+        user.in(message.toUser.id).emit('notifications', message);
       });
 
       socket.on('disconnect', () => {

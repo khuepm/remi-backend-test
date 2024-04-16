@@ -12,10 +12,10 @@ export const authJWTMiddleware = async (req: RequestWithUser, res: Response, nex
     console.log(req, Authorization);
 
     if (Authorization) {
-      const secretKey: string = process.env.SECRET_KEY;
+      const secretKey: string = process.env.SECRET_KEY || "";
       const verificationResponse = (await verify(Authorization, secretKey)) as DataStoredInToken;
 
-      if (verificationResponse.address) {
+      if (verificationResponse.id) {
         req.user = verificationResponse;
         next();
       } else {

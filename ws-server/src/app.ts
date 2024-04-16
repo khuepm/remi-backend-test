@@ -10,12 +10,11 @@ import { logger, stream } from '@utils/logger';
 import http from 'http';
 import { Server } from 'socket.io';
 import { SocketService } from '@services/socket.service';
-
-export type BlockchainAddress = `0x${string}`;
+import { Routes } from './server';
 
 export type User = {
   name?: string;
-  address: BlockchainAddress;
+  id: string;
 };
 
 export type MessageType = 'notifications';
@@ -33,18 +32,19 @@ class App {
   public server: http.Server;
   public io;
 
-  constructor() {
+  constructor(routes: Routes[]) {
     this.app = express();
     this.server = http.createServer(this.app);
     this.env = process.env.NODE_ENV || 'development';
-    this.port = process.env.PORT || 3010;
+    this.port = process.env.PORT || 3000;
+    this.initializeRoutes(routes);
 
     this.io = new Server(this.server, {
       pingInterval: 10000,
       pingTimeout: 50000,
       allowEIO3: true,
       cors: {
-        origin: process.env.ORIGIN,
+        origin: process.env.ORIGIN || "*",
         methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-type', 'Accept', 'X-Access-Token', 'X-Key'],
       },
@@ -56,7 +56,7 @@ class App {
 
   public listen() {
     new SocketService(this.io);
-    this.server.listen(process.env.WS_PORT || 3001);
+    this.server.listen(process.env.WS_PORT || 3020);
     this.app.listen(this.port, () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
@@ -73,9 +73,15 @@ class App {
     return this.app;
   }
 
+  private initializeRoutes(routes: Routes[]) {
+    routes.forEach(route => {
+      this.app.use('/', route.router);
+    });
+  }
+
   private initializeMiddlewares() {
-    this.app.use(morgan(process.env.LOG_FORMAT, { stream }));
-    this.app.use(cors({ origin: process.env.ORIGIN, credentials: process.env.CREDENTIALS == 'true' }));
+    this.app.use(morgan(process.env.LOG_FORMAT || "dev", { stream }));
+    this.app.use(cors({ origin: process.env.ORIGIN || "*", credentials: Boolean(process.env.CREDENTIALS) || true }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
