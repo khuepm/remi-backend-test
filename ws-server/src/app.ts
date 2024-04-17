@@ -1,15 +1,15 @@
+import { SocketService } from '@/socket/socket.service';
+import errorMiddleware from '@middlewares/error.middleware';
+import { logger, stream } from '@utils/logger';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import morgan from 'morgan';
-import errorMiddleware from '@middlewares/error.middleware';
-import { logger, stream } from '@utils/logger';
 import http from 'http';
+import morgan from 'morgan';
 import { Server } from 'socket.io';
-import { SocketService } from '@/socket/socket.service';
 import { Routes } from './server';
 
 export type User = {
@@ -61,6 +61,7 @@ class App {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
+      logger.info(`🚀 WS listening on the port ${process.env.WS_PORT}`);
       logger.info(`=================================`);
     });
   }
@@ -80,8 +81,15 @@ class App {
   }
 
   private initializeMiddlewares() {
+    this.app.use(function (req, res, next) {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      next();
+    });
     this.app.use(morgan(process.env.LOG_FORMAT || "dev", { stream }));
-    this.app.use(cors({ origin: process.env.ORIGIN || "*", credentials: Boolean(process.env.CREDENTIALS) || true }));
+    this.app.use(cors({ origin: "*", credentials: true }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
