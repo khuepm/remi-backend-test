@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     container_name: remi-ws-server
     ports:
-      - '4100:3000' #http
-      - '4120:3020' #websocket
+      - '3000:3000' #http
+      - '3020:3020' #websocket
     volumes:
       - ./ws-server:/app
       - ./ws-server/node_modules:/app/node_modules
