@@ -37,7 +37,6 @@ class App {
     this.server = http.createServer(this.app);
     this.env = process.env.NODE_ENV || 'development';
     this.port = process.env.PORT || 3000;
-    this.initializeRoutes(routes);
 
     this.io = new Server(this.server, {
       pingInterval: 10000,
@@ -52,6 +51,7 @@ class App {
 
     this.initializeMiddlewares();
     this.initializeErrorHandling();
+    this.initializeRoutes(routes);
   }
 
   public listen() {
