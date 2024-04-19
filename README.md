@@ -42,10 +42,6 @@ Install Docker then run
 docker-compose up
 ```
 
-#Flow
-
-![Screenshot](notification-service.png)
-
 #Folder Structure
 
 ```
