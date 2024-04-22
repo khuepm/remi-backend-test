@@ -1,4 +1,6 @@
-import { SocketService } from '@/socket/socket.service';
+import { SocketRoute } from '@/socket/socket.route';
+import { Routes } from '@/youtube/types';
+import { YoutubeRoute } from '@/youtube/youtube.route';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import compression from 'compression';
@@ -9,8 +11,6 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import http from 'http';
 import morgan from 'morgan';
-import { Server } from 'socket.io';
-import { Routes } from './youtube/types';
 
 export type User = {
   name?: string;
@@ -30,7 +30,6 @@ class App {
   public env: string;
   public port: string | number;
   public server: http.Server;
-  public io;
 
   constructor(routes: Routes[]) {
     this.app = express();
@@ -38,25 +37,12 @@ class App {
     this.env = process.env.NODE_ENV || 'development';
     this.port = process.env.PORT || 3000;
 
-    this.io = new Server(this.server, {
-      pingInterval: 10000,
-      pingTimeout: 50000,
-      allowEIO3: true,
-      cors: {
-        origin: process.env.ORIGIN || "*",
-        methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-type', 'Accept', 'X-Access-Token', 'X-Key'],
-      },
-    });
-
     this.initializeMiddlewares();
     this.initializeErrorHandling();
     this.initializeRoutes(routes);
   }
 
   public listen() {
-    new SocketService(this.io);
-    this.server.listen(process.env.WS_PORT || 3020);
     this.app.listen(this.port, () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
@@ -64,14 +50,6 @@ class App {
       logger.info(`🚀 WS listening on the port ${process.env.WS_PORT}`);
       logger.info(`=================================`);
     });
-  }
-
-  public getWS() {
-    return this.io;
-  }
-
-  public getServer() {
-    return this.app;
   }
 
   private initializeRoutes(routes: Routes[]) {
@@ -96,12 +74,13 @@ class App {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    // this.io.use(wrapSocket(authMiddleware));
   }
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
   }
 }
-
-export default App;
+// "a
+const youtubeRoute = new YoutubeRoute();
+const socketRoute = new SocketRoute();
+export const app = new App([youtubeRoute, socketRoute]);

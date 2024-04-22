@@ -1,5 +1,5 @@
-import { youtubeService } from '@/server';
 import { HttpException } from '@exceptions/HttpException';
+import { youtubeService } from './types';
 
 export class YoutubeService {
 
@@ -8,7 +8,6 @@ export class YoutubeService {
       part: ['snippet'],
       id: videoIds
     })
-
     if (!foundVideo) throw new HttpException(409, "Video doesn't exist");
 
     return foundVideo;

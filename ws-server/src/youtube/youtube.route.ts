@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { YoutubeController } from './youtube.controller';
-import { Routes } from '@/server';
+import { Routes } from './types';
+import YoutubeController from './youtube.controller';
 
 export class YoutubeRoute implements Routes {
   public path = '/youtube';
@@ -13,6 +13,6 @@ export class YoutubeRoute implements Routes {
 
   private initializeRoutes() {
     this.router.post(`${this.path}`, this.controller.getVideos);
-    // this.router.get(`${this.path}`, this.controller.ping);
+    this.router.get(`${this.path}`, this.controller.isOk);
   }
 }

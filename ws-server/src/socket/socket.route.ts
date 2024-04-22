@@ -1,6 +1,6 @@
+import { Routes } from '@/youtube/types';
 import { Router } from 'express';
 import { SocketController } from './socket.controller';
-import { Routes } from '@/server';
 
 export class SocketRoute implements Routes {
   public path = '/';

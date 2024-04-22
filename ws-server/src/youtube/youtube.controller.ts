@@ -1,7 +1,7 @@
 import { YoutubeService } from "@/youtube/youtube.service";
 import { NextFunction, Request, Response } from "express";
 
-export class YoutubeController {
+ export default class YoutubeController {
   public service = new YoutubeService();
 
   public getVideos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -10,6 +10,7 @@ export class YoutubeController {
       //TODO: support get multi videos. The specs do not have this req so I skip it :D
       if(ids === undefined){
         res.status(400).json({ error: true, message: 'Missing id parameter' });
+        return;
       }
       const getVideosData = await this.service.findVideoById([ids]);
       if (getVideosData.data) {
@@ -26,9 +27,9 @@ export class YoutubeController {
     }
   };
 
-  public ping = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public isOk = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      res.status(200).json({ data: [], message: 'pong' });
+      res.status(200).json({ data: [], message: 'OK' });
     } catch (error) {
       next(error);
     }
