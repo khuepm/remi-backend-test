@@ -10,7 +10,7 @@
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "sh ./build.sh",
     "build:tsc": "tsc && tsc-alias",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest src/__test__ ",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "npm run lint -- --fix",
     "deploy": "sh ./deploy.sh",
